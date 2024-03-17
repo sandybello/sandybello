@@ -1,0 +1,212 @@
+# codificación: utf-8
+
+# # Estadística para el examen final de ciencia de datos
+
+# En[16]:
+
+
+importar pandas como pd
+
+
+# En[17]:
+
+
+boston_url = 'https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-ST0151EN-SkillsNetwork/labs/boston_housing.csv'
+boston_df=pd.read_csv(boston_url, encabezado= 0)
+
+
+# En [18]:
+
+
+boston_df.cabeza
+
+
+# <método enlazado NDFrame.head de Sin nombre: 0 CRIM ZN INDUS CHAS NOX RM AGE DIS RAD \
+# 0 0 0,00632 18,0 2,31 0,0 0,538 6,575 65,2 4,0900 1,0   
+# 1 1 0,02731 0,0 7,07 0,0 0,469 6,421 78,9 4,9671 2,0   
+# 2 2 0,02729 0,0 7,07 0,0 0,469 7,185 61,1 4,9671 2,0   
+# 3 3 0,03237 0,0 2,18 0,0 0,458 6,998 45,8 6,0622 3,0   
+# 4 4 0,06905 0,0 2,18 0,0 0,458 7,147 54,2 6,0622 3,0   
+# .. ... ... ... ... ... ... ... ... ... ...   
+# 501 501 0,06263 0,0 11,93 0,0 0,573 6,593 69,1 2,4786 1,0   
+# 502 502 0,04527 0,0 11,93 0,0 0,573 6,120 76,7 2,2875 1,0   
+# 503 503 0,06076 0,0 11,93 0,0 0,573 6,976 91,0 2,1675 1,0   
+# 504 504 0,10959 0,0 11,93 0,0 0,573 6,794 89,3 2,3889 1,0   
+# 505 505 0,04741 0,0 11,93 0,0 0,573 6,030 80,8 2,5050 1,0   
+#
+# IMPUESTO PTRATIO LSTAT MEDV  
+# 0 296,0 15,3 4,98 24,0  
+# 1 242,0 17,8 9,14 21,6  
+# 2 242,0 17,8 4,03 34,7  
+#3 222,0 18,7 2,94 33,4  
+# 4 222,0 18,7 5,33 36,2  
+# .. ... ... ... ...  
+# 501 273,0 21,0 9,67 22,4  
+# 502 273,0 21,0 9,08 20,6  
+# 503 273,0 21,0 5,64 23,9  
+# 504 273,0 21,0 6,48 22,0  
+# 505 273,0 21,0 7,88 11,9  
+#
+# [506 filas x 14 columnas]>
+
+# # 1. Valor medio de las viviendas ocupadas por sus propietarios
+
+# En 19]:
+
+
+importar matplotlib.pyplot como plt
+
+plt.figura(tamaño de figura=(8, 6))
+plt.boxplot(boston_df['MEDV'])
+plt.xlabel('Valor medio de las viviendas ocupadas por sus propietarios')
+plt.ylabel('Valor')
+plt.title('Gráfico de caja del valor medio de las viviendas ocupadas por sus propietarios')
+plt.mostrar()
+
+
+# # 2. Variable del río Charles
+
+# En 20]:
+
+
+importar matplotlib.pyplot como plt
+
+# Cuente las apariciones de cada valor en la variable del río Charles
+charles_river_counts = boston_df['CHAS'].value_counts()
+
+# Crea un diagrama de barras
+plt.figura(tamaño de figura=(6, 4))
+charles_river_counts.plot(tipo='barra')
+plt.xlabel('Río Charles')
+plt.ylabel('Contar')
+plt.title('Parcela de bar del río Charles')
+plt.xticks(rotación='horizontal')
+plt.mostrar()
+
+
+# # 3. Diagrama de caja de MEDV vs AGE
+
+# En [21]:
+
+
+importar matplotlib.pyplot como plt
+
+# Discretiza la variable EDAD en tres grupos
+boston_df['AGE_GROUP'] = pd.cut(boston_df['AGE'], bins=[0, 35, 70, float('inf')], etiquetas=['35 años y menos', 'entre 35 y 70 años', '70 años y más'])
+
+# Crea el diagrama de caja
+plt.figura(tamaño de figura=(8, 6))
+plt.boxplot([boston_df[boston_df['AGE_GROUP'] == '35 años y menos']['MEDV'],
+             boston_df[boston_df['AGE_GROUP'] == 'entre 35 y 70 años']['MEDV'],
+             boston_df[boston_df['AGE_GROUP'] == '70 años y más']['MEDV']],
+            etiquetas=['35 años y menos', 'entre 35 y 70 años', '70 años y más'])
+plt.xlabel('Grupo de edad')
+plt.ylabel('Valor medio de las viviendas ocupadas por sus propietarios')
+plt.title('Gráfico de caja de MEDV vs AGE')
+plt.mostrar()
+
+
+# # 4. Gráfico de dispersión: NOX vs INDUS
+
+# En [22]:
+
+
+importar matplotlib.pyplot como plt
+
+# Crea el diagrama de dispersión
+plt.figura(tamaño de figura=(8, 6))
+plt.scatter(boston_df['NOX'], boston_df['INDUS'])
+plt.xlabel('Concentración de óxido nítrico')
+plt.ylabel('Proporción de acres comerciales no minoristas')
+plt.title('Gráfico de dispersión: NOX vs INDUS')
+plt.mostrar()
+
+
+# # 5. Histograma de PTRATIO
+
+# En[23]:
+
+
+importar matplotlib.pyplot como plt
+
+# Crea el histograma
+plt.figura(tamaño de figura=(8, 6))
+plt.hist(boston_df['PTRATIO'], bins=10, edgecolor='negro')
+plt.xlabel('Proporción alumnos-maestros')
+plt.ylabel('Frecuencia')
+plt.title('Histograma de PTRATIO')
+plt.mostrar()
+
+
+# # Tarea 5
+
+# 1. ¿Existe una diferencia significativa en el valor medio de las casas delimitadas por el río Charles o no? (Prueba T para muestras independientes)
+
+# En[24]:
+
+
+importar scipy.stats como estadísticas
+
+# Dividir el conjunto de datos en dos grupos según el río Charles (0: no delimitado, 1: delimitado)
+charles_bounded = boston_df[boston_df['CHAS'] == 1]['MEDV']
+charles_not_bounded = boston_df[boston_df['CHAS'] == 0]['MEDV']
+
+# Realizar la prueba T para muestras independientes
+t_stat, p_value = stats.ttest_ind(charles_bounded, charles_not_bounded)
+
+# Definir el nivel de significancia
+alfa = 0,05
+
+# Compruebe si el valor p es menor que el nivel de significancia
+si valor_p < alfa:
+    print("Existe una diferencia significativa en el valor medio de las casas delimitadas por el río Charles.")
+demás:
+    print("No hay una diferencia significativa en el valor medio de las casas delimitadas por el río Charles.")
+
+
+# 2. ¿Existe una diferencia en los valores medios de las casas (MEDV) para cada proporción de unidades ocupadas por sus propietarios construidas antes de 1940 (AGE)? (ANOVA)
+
+# En[25]:
+
+
+importar scipy.stats como estadísticas
+
+# Crea tres grupos basados ​​en la variable EDAD
+grupo_edad_1 = boston_df[boston_df['EDAD'] <= 35]['MEDV']
+grupo_edad_2 = boston_df[(boston_df['EDAD'] > 35) & (boston_df['EDAD'] <= 70)]['MEDV']
+grupo_edad_3 = boston_df[boston_df['EDAD'] > 70]['MEDV']
+
+# Realizar ANOVA unidireccional
+f_stat, p_value = stats.f_oneway(grupo_edad_1, grupo_edad_2, grupo_edad_3)
+
+# Definir el nivel de significancia
+alfa = 0,05
+
+# Compruebe si el valor p es menor que el nivel de significancia
+si valor_p < alfa:
+    print("Existe una diferencia significativa en los valores medios de las casas para cada proporción de unidades ocupadas por sus propietarios construidas antes de 1940.")
+demás:
+    print("No hay una diferencia significativa en los valores medios de las casas para cada proporción de unidades ocupadas por sus propietarios construidas antes de 1940.")
+
+
+# 3. ¿Podemos concluir que no existe relación entre las concentraciones de óxido nítrico y la proporción de acres de negocios no minoristas por ciudad? (Correlación de Pearson)
+
+# En [26]:
+
+
+importar scipy.stats como estadísticas
+
+# Calcule el coeficiente de correlación de Pearson y el valor p
+corr_coeff, p_value = stats.pearsonr(boston_df['NOX'], boston_df['INDUS'])
+
+# Definir el nivel de significancia
+alfa = 0,05
+
+# Compruebe si el valor p es mayor que el nivel de significancia
+si valor_p >= alfa:
+    print("No podemos concluir que exista una relación significativa entre las concentraciones de óxido nítrico y la proporción de acres comerciales no minoristas por ciudad").
+demás:
+    print("Existe una relación significativa entre las concentraciones de óxido nítrico y la proporción de acres de negocios no minoristas por ciudad").
+
+
+# 4. ¿Cuál es el impacto de una distancia ponderada adicional a los cinco centros de empleo de Boston en el valor medio de las viviendas ocupadas por sus propietarios? (Análisis de regresión)
